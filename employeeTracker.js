@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-const inquirer = require('inquirer');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -12,10 +11,10 @@ const connection = mysql.createConnection({
 
   // Your password
   password: 'manchester2021',
-  database: 'employees',
+  database: 'employeesDB',
 });
 
 connection.connect((err) => {
   if (err) throw err;
-  runSearch();
+  console.log(`connected as id ${connection.threadId}`);
 });
