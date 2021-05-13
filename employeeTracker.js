@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -80,6 +81,6 @@ function employeesByDepartmentSearch() {
   function(err, res) {
     if (err) throw err
     console.table(res)
-    startPrompt()
+    runPrompt()
   })
 }
