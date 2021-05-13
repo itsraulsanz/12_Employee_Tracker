@@ -26,7 +26,7 @@ const runPrompt = () => {
   inquirer
     .prompt({
       name: 'action',
-      type: 'rawlist',
+      type: 'list',
       message: 'What would you like to do?',
       choices: [
         'View All Employees By Department',
@@ -78,6 +78,16 @@ const runPrompt = () => {
 // View All Employees By Department
 function employeesByDepartmentSearch() {
   connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+  function(err, res) {
+    if (err) throw err
+    console.table(res)
+    runPrompt()
+  })
+}
+
+// View All Employees By Manager
+function employeesByManagerSearch() {
+  connection.query("SELECT employee.first_name, employee.last_name, employee.manager_id AS Manager FROM employee ORDER BY employee.manager_id;", 
   function(err, res) {
     if (err) throw err
     console.table(res)
