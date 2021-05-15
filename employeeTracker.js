@@ -86,7 +86,7 @@ const runPrompt = () => {
           break;
 
         case "Update Employee Manager":
-          updateEmployeManager();
+          updateEmployeeManager();
           break;
 
         case "View All Roles":
@@ -283,6 +283,51 @@ function updateEmployeeRole() {
         [
           {
             role_id: answers.role,
+          },
+          {
+            id: answers.employee_name,
+          }
+        ],
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          runPrompt();
+        }
+      );
+    });
+    });
+}
+
+// Update Employee's Manager
+function updateEmployeeManager() {
+  return connection.query("SELECT * FROM employee", (error, results) => {
+    inquirer.prompt([
+      {
+        name: "employee_name",
+        type: "list",
+        choices() {
+            return results.map(({ id, first_name, last_name }) => {
+              return { name: first_name + " " + last_name, value: id };
+            });
+        },
+        message: "Who is the employee you want to update?",
+      },
+      {
+        name: "manager",
+        type: "list",
+        choices() {
+            return results.map(({ id, manager_id }) => {
+              return { name: manager_id, value: id };
+            });
+        },
+        message: "What is the new employee's manager?",
+      },
+    ]).then((answers ) =>{
+      connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        [
+          {
+            manager_id: answers.manager,
           },
           {
             id: answers.employee_name,
