@@ -124,6 +124,7 @@ function employeesByManagerSearch() {
   );
 }
 
+// View All Employees
 function viewEmployees() {
   connection.query("SELECT * FROM employee;", function (err, res) {
     if (err) throw err;
@@ -132,6 +133,7 @@ function viewEmployees() {
   });
 }
 
+// View All Departments
 function viewAllDepartments() {
   connection.query("SELECT * FROM department;", function (err, res) {
     if (err) throw err;
@@ -140,6 +142,7 @@ function viewAllDepartments() {
   });
 }
 
+// View All Roles
 function viewAllRoles() {
   connection.query("SELECT * FROM role;", function (err, res) {
     if (err) throw err;
@@ -148,6 +151,7 @@ function viewAllRoles() {
   });
 }
 
+// Add Employee
 function addEmployee() {
   return connection.query("SELECT * FROM employee, role WHERE role.id = role_id ", (error, results) => {
   inquirer.prompt([
@@ -187,6 +191,7 @@ function addEmployee() {
   });
 }
 
+// Add Department
 function addDepartment() {
   inquirer
     .prompt([
@@ -208,7 +213,8 @@ function addDepartment() {
     });
 }
 
- function addRole() {
+// Add Role
+function addRole() {
   connection.query("SELECT * FROM department", (error, results) => {
     if (error) throw error;
     inquirer.prompt([
@@ -245,4 +251,9 @@ function addDepartment() {
         );
       });
   });
+}
+
+// Add Update Employee Role
+function updateEmployeeRole() {
+
 }
