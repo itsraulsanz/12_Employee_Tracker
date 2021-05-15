@@ -342,3 +342,31 @@ function updateEmployeeManager() {
     });
     });
 }
+
+// Remove Employee
+function removeEmployee() {
+  return connection.query("SELECT * FROM employee", (error, results) => {
+    inquirer.prompt([
+      {
+        name: "employee",
+        type: "list",
+        choices() {
+            return results.map(({ id, first_name, last_name }) => {
+              return { name: first_name + " " + last_name, value: id };
+            });
+        },
+        message: "Who is the employee you want to remove?",
+      },
+    ]).then((answers ) =>{
+      connection.query(
+        "DELETE FROM employee WHERE ?",
+        [{id: answers.employee}],
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          runPrompt();
+        }
+      );
+    });
+    });
+}
