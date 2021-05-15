@@ -149,6 +149,7 @@ function viewAllRoles() {
 }
 
 function addEmployee() {
+  return connection.query("SELECT * FROM employee, role WHERE role.id = role_id ", (error, results) => {
   inquirer.prompt([
     { name: "first_name", type: "input", message: "What is the Employee's first name?" },
     { name: "last_name", type: "input", message: "What is your Employee's last name?" },
@@ -156,11 +157,9 @@ function addEmployee() {
       name: "manager_id",
       type: "list",
       choices() {
-        return connection.query("SELECT * FROM employee", (error, results) => {
           return results.map(({ id, first_name, last_name }) => {
-            return { name: first_name + last_name, value: id };
+            return { name: first_name + " " + last_name, value: id };
           });
-        });
       },
       message: "Who is this employee's manager?",
     },
@@ -168,11 +167,9 @@ function addEmployee() {
       name: "role_id",
       type: "list",
       choices() {
-        return connection.query("SELECT * FROM role", (error, results) => {
           return results.map(({ id, title }) => {
             return { name: title, value: id };
           });
-        });
       },
       message: "What is this employee's role?",
     },
@@ -186,6 +183,7 @@ function addEmployee() {
         runPrompt();
       }
     );
+  });
   });
 }
 
@@ -213,8 +211,7 @@ function addDepartment() {
  function addRole() {
   connection.query("SELECT * FROM department", (error, results) => {
     if (error) throw error;
-    inquirer
-      .prompt([
+    inquirer.prompt([
         {
           name: "title",
           type: "input",
