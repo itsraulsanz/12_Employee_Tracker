@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 
+// Creating the connection 
 const connection = mysql.createConnection({
   host: "localhost",
 
@@ -29,34 +30,33 @@ const runPrompt = () => {
       type: "list",
       message: "What would you like to do?",
       choices: [
+        "View All Employees",
         "View All Employees By Department",
         "View All Employees By Manager",
-        "View All Employees",
         "View All Departments",
         "View All Roles",
         "Add Employee",
         "Add Department",
         "Add Role",
         "Remove Employee",
-        "Remove Role",
         "Remove Department",
+        "Remove Role",
         "Update Employee Role",
         "Update Employee Manager",
-        "View All Roles",
       ],
     })
     .then((answer) => {
       switch (answer.action) {
+        case "View All Employees":
+          viewEmployees();
+          break;
+
         case "View All Employees By Department":
           employeesByDepartmentSearch();
           break;
 
         case "View All Employees By Manager":
           employeesByManagerSearch();
-          break;
-
-        case "View All Employees":
-          viewEmployees();
           break;
 
         case "View All Departments":
@@ -83,12 +83,12 @@ const runPrompt = () => {
           removeEmployee();
           break;
 
-        case "Remove Role":
-          removeRole();
-          break;
-
         case "Remove Department":
           removeDepartment();
+          break;
+
+        case "Remove Role":
+          removeRole();
           break;
 
         case "Update Employee Role":
@@ -99,10 +99,6 @@ const runPrompt = () => {
           updateEmployeeManager();
           break;
 
-        case "View All Roles":
-          rolesSearch();
-          break;
-
         default:
           console.log(`Invalid action: ${answer.action}`);
           break;
@@ -110,6 +106,14 @@ const runPrompt = () => {
     });
 };
 
+// View All Employees
+function viewEmployees() {
+  connection.query("SELECT * FROM employee;", function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    runPrompt();
+  });
+}
 // View All Employees By Department
 function employeesByDepartmentSearch() {
   connection.query(
@@ -132,15 +136,6 @@ function employeesByManagerSearch() {
       runPrompt();
     }
   );
-}
-
-// View All Employees
-function viewEmployees() {
-  connection.query("SELECT * FROM employee;", function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    runPrompt();
-  });
 }
 
 // View All Departments
@@ -401,36 +396,6 @@ function removeEmployee() {
   });
 }
 
-// Remove Role
-function removeRole() {
-  return connection.query("SELECT * FROM role", (error, results) => {
-    inquirer
-      .prompt([
-        {
-          name: "role",
-          type: "list",
-          choices() {
-            return results.map(({ id, title }) => {
-              return { name: title, value: id };
-            });
-          },
-          message: "What is the role you want to remove?",
-        },
-      ])
-      .then((answers) => {
-        connection.query(
-          "DELETE FROM role WHERE ?",
-          [{ id: answers.role }],
-          function (err, res) {
-            if (err) throw err;
-            console.table(res);
-            runPrompt();
-          }
-        );
-      });
-  });
-}
-
 // Remove Department
 function removeDepartment() {
   return connection.query("SELECT * FROM department", (error, results) => {
@@ -451,6 +416,36 @@ function removeDepartment() {
         connection.query(
           "DELETE FROM department WHERE ?",
           [{ id: answers.department }],
+          function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            runPrompt();
+          }
+        );
+      });
+  });
+}
+
+// Remove Role
+function removeRole() {
+  return connection.query("SELECT * FROM role", (error, results) => {
+    inquirer
+      .prompt([
+        {
+          name: "role",
+          type: "list",
+          choices() {
+            return results.map(({ id, title }) => {
+              return { name: title, value: id };
+            });
+          },
+          message: "What is the role you want to remove?",
+        },
+      ])
+      .then((answers) => {
+        connection.query(
+          "DELETE FROM role WHERE ?",
+          [{ id: answers.role }],
           function (err, res) {
             if (err) throw err;
             console.table(res);
