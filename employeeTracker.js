@@ -253,7 +253,47 @@ function addRole() {
   });
 }
 
-// Add Update Employee Role
+// Update Employee's Role
 function updateEmployeeRole() {
-
+  return connection.query("SELECT * FROM employee", (error, results) => {
+    inquirer.prompt([
+      {
+        name: "employee_name",
+        type: "list",
+        choices() {
+            return results.map(({ id, first_name, last_name }) => {
+              return { name: first_name + " " + last_name, value: id };
+            });
+        },
+        message: "Who is the employee you want to update?",
+      },
+      {
+        name: "role",
+        type: "list",
+        choices() {
+            return results.map(({ id, title }) => {
+              return { name: title, value: id };
+            });
+        },
+        message: "What is the new employee's role?",
+      },
+    ]).then((answers ) =>{
+      connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        [
+          {
+            role_id: answers.role,
+          },
+          {
+            id: answers.employee_name,
+          }
+        ],
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          runPrompt();
+        }
+      );
+    });
+    });
 }
