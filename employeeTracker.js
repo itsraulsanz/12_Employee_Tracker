@@ -38,6 +38,7 @@ const runPrompt = () => {
         "Add Department",
         "Add Role",
         "Remove Employee",
+        "Remove Role",
         "Update Employee Role",
         "Update Employee Manager",
         "View All Roles",
@@ -80,6 +81,10 @@ const runPrompt = () => {
         case "Remove Employee":
           removeEmployee();
           break;
+
+          case "Remove Role":
+            removeRole();
+            break;
 
         case "Update Employee Role":
           updateEmployeeRole();
@@ -361,6 +366,34 @@ function removeEmployee() {
       connection.query(
         "DELETE FROM employee WHERE ?",
         [{id: answers.employee}],
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          runPrompt();
+        }
+      );
+    });
+    });
+}
+
+// Remove Employee
+function removeRole() {
+  return connection.query("SELECT * FROM role", (error, results) => {
+    inquirer.prompt([
+      {
+        name: "role",
+        type: "list",
+        choices() {
+            return results.map(({ id, title }) => {
+              return { name: title, value: id };
+            });
+        },
+        message: "What is the role you want to remove?",
+      },
+    ]).then((answers ) =>{
+      connection.query(
+        "DELETE FROM role WHERE ?",
+        [{id: answers.role}],
         function (err, res) {
           if (err) throw err;
           console.table(res);
