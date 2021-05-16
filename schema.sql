@@ -23,11 +23,3 @@ CREATE TABLE employee (
     FOREIGN KEY (role_id)
         REFERENCES role(role_id)
 );
-
--- employeesByDepartmentSearch
-SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;
-
--- employeesByManagerSearch
-SELECT employee.first_name, employee.last_name, employee.manager_id AS Manager FROM employee ORDER BY employee.manager_id;
-
-SELECT * FROM employeesDB;
