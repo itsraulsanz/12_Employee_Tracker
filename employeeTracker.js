@@ -108,7 +108,7 @@ const runPrompt = () => {
 
 // View All Employees
 function viewEmployees() {
-  connection.query("SELECT * FROM employee;", function (err, res) {
+  connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;", function (err, res) {
     if (err) throw err;
     console.table(res);
     runPrompt();
@@ -129,7 +129,7 @@ function employeesByDepartmentSearch() {
 // View All Employees By Manager
 function employeesByManagerSearch() {
   connection.query(
-    "SELECT employee.first_name, employee.last_name, employee.manager_id AS Manager FROM employee ORDER BY employee.manager_id;",
+    "SELECT employee.first_name, employee.last_name, employee.manager_id FROM employee ORDER BY employee.manager_id;",
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -200,7 +200,7 @@ function addEmployee() {
             answers,
             function (err, res) {
               if (err) throw err;
-              console.table(res);
+              console.log(`${answers.first_name} ${answers.last_name} has been inserted.`);
               runPrompt();
             }
           );
@@ -215,16 +215,16 @@ function addDepartment() {
     .prompt([
       {
         name: "name",
-        message: "what is the name of the department you want to add?",
+        message: "What is the name of the department you want to add?",
       },
     ])
-    .then((answer) => {
+    .then((answers) => {
       connection.query(
         "INSERT INTO department SET ?",
-        answer,
+        answers,
         function (err, res) {
           if (err) throw err;
-          console.table(res);
+          console.log(`The ${answers.name}'s Department has been inserted.`);
           runPrompt();
         }
       );
@@ -264,7 +264,7 @@ function addRole() {
           answers,
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The ${answers.title}'s Role has been inserted.`);
             runPrompt();
           }
         );
@@ -311,7 +311,7 @@ function updateEmployeeRole() {
           ],
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The ${answers.employee_name}'s Role has been updated.`);
             runPrompt();
           }
         );
@@ -358,7 +358,7 @@ function updateEmployeeManager() {
           ],
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The ${answers.employee_name}'s Manager has been updated.`);
             runPrompt();
           }
         );
@@ -388,7 +388,7 @@ function removeEmployee() {
           [{ id: answers.employee }],
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The employee with the ID ${answers.employee} has been removed.`);
             runPrompt();
           }
         );
@@ -418,7 +418,7 @@ function removeDepartment() {
           [{ id: answers.department }],
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The ${answers.department}'s Department has been removed.`);
             runPrompt();
           }
         );
@@ -448,7 +448,7 @@ function removeRole() {
           [{ id: answers.role }],
           function (err, res) {
             if (err) throw err;
-            console.table(res);
+            console.log(`The Role has been removed.`);
             runPrompt();
           }
         );
