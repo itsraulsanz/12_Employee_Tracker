@@ -39,7 +39,7 @@ The app uses:
 
 Run the app "node employeeTracker.js" and a list of options will be presented. When you select any of the "view" options, you'll get a table presenting the queried data. If you ask for adding an Employee, Department or Role, you'll be asked for details about the new addition. When you select to remove an Employee, Department or Role, you'll be asked to specify which one you want to remove from the database. Or if you want to update the Employee's Role or Manager, you'll have to select the name of the employee and what is their new Role / Manager.
 
-<img src="./assets/demo.gif">
+VIDEO DEMO: <a href="https://drive.google.com/file/d/1EzxpPfvKKG6JadiWCaKN-VRDmy44KGuZ/view">https://drive.google.com/file/d/1EzxpPfvKKG6JadiWCaKN-VRDmy44KGuZ/view</a>
 
 ## License
 
